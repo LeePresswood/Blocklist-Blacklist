@@ -1,51 +1,50 @@
 package com.leepresswood.adaware;
 
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 @Service
-class InfoService {
+public class InfoService {
 
-    @Async
-    CompletableFuture<Map<String, String>> getIpInfo(String ip) {
-        return CompletableFuture.supplyAsync(() -> runWhois(ip))
-                                .thenApplyAsync(InfoService::convertToMap);
+    public Whois getIpInfo(String ip) {
+        BufferedReader r = runWhois(ip);
+        return r == null ? null : buildResult(r);
     }
 
-    private ArrayList<String> runWhois(String ip) {
+    private BufferedReader runWhois(String ip) {
         ProcessBuilder builder = new ProcessBuilder("whois", ip);
         builder.redirectErrorStream(true);
-        Process process = null;
-        ArrayList<String> results = new ArrayList<>();
+        Process process;
 
         try {
             process = builder.start();
-            BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-            String line;
-            while ((line = input.readLine()) != null) {
-                results.add(line);
-            }
-
-            return results;
+            return new BufferedReader(new InputStreamReader(process.getInputStream()));
         } catch (IOException e) {
-            return results;
+            return null;
         }
     }
 
-    private static Map<String, String> convertToMap(ArrayList<String> arr) {
+    private static Whois buildResult(BufferedReader input) {
+        try {
+            Whois results = new Whois();
 
-        HashMap<String, String> results = new HashMap<>();
+            String line;
+            while ((line = input.readLine()) != null) {
+                String[] tokenized = line.split(": ");
 
-        System.out.println(arr);
-        return results;
+                if (results.state.equals("") && tokenized[0].equals("Registrant State/Province")) {
+                    results.state = tokenized[1];
+                } else if (results.country.equals("") && tokenized[0].equals("Registrant Country")) {
+                    results.country = tokenized[1];
+                }
+            }
+
+            return !results.state.equals("") && !results.country.equals("") ? results : null;
+        } catch (IOException e) {
+            return null;
+        }
     }
 }

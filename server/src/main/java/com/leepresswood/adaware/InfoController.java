@@ -4,30 +4,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.security.InvalidParameterException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-@RestController
-class InfoController {
+@Controller
+public class InfoController {
     @Autowired
     private InfoService service;
 
     @GetMapping(value = "/connection-info", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map> getConnectionInfo(
+    public ResponseEntity<Whois> getConnectionInfo(
             @RequestParam(value = "ip", defaultValue = "") String ip) throws InterruptedException, ExecutionException {
         if (ip == null || ip.length() == 0) {
             throw new InvalidParameterException();
         }
 
-        Map map = service.getIpInfo(ip).get();
-        return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+        Whois response = service.getIpInfo(ip);
+
+        if(response == null){
+            throw new InvalidParameterException();
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 

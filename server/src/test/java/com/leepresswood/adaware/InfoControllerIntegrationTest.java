@@ -1,5 +1,6 @@
 package com.leepresswood.adaware;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +13,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class InfoControllerIntegrationTest {
-
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -26,9 +25,14 @@ public class InfoControllerIntegrationTest {
         TimeUnit.SECONDS.sleep(1);
         ResponseEntity<Whois> body = this.restTemplate.getForEntity("/connection-info?ip=www.google.com", Whois.class);
 
-        assertThat(body.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(body.getBody().state).isEqualTo("CA");
-        assertThat(body.getBody().country).isEqualTo("US");
+        Assertions.assertThat(body.getStatusCode())
+                  .isEqualTo(HttpStatus.OK);
+
+        Assertions.assertThat(body.getBody().state)
+                  .isEqualTo("CA");
+
+        Assertions.assertThat(body.getBody().country)
+                  .isEqualTo("US");
     }
 
     @Test
@@ -36,9 +40,14 @@ public class InfoControllerIntegrationTest {
         TimeUnit.SECONDS.sleep(1);
         ResponseEntity<Whois> body = this.restTemplate.getForEntity("/connection-info?ip=www.facebook.com", Whois.class);
 
-        assertThat(body.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(body.getBody().state).isEqualTo("CA");
-        assertThat(body.getBody().country).isEqualTo("US");
+        Assertions.assertThat(body.getStatusCode())
+                  .isEqualTo(HttpStatus.OK);
+
+        Assertions.assertThat(body.getBody().state)
+                  .isEqualTo("CA");
+
+        Assertions.assertThat(body.getBody().country)
+                  .isEqualTo("US");
     }
 
     @Test
@@ -46,9 +55,14 @@ public class InfoControllerIntegrationTest {
         TimeUnit.SECONDS.sleep(1);
         ResponseEntity<Whois> body = this.restTemplate.getForEntity("/connection-info?ip=www.microsoft.com", Whois.class);
 
-        assertThat(body.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(body.getBody().state).isEqualTo("WA");
-        assertThat(body.getBody().country).isEqualTo("US");
+        Assertions.assertThat(body.getStatusCode())
+                  .isEqualTo(HttpStatus.OK);
+
+        Assertions.assertThat(body.getBody().state)
+                  .isEqualTo("WA");
+
+        Assertions.assertThat(body.getBody().country)
+                  .isEqualTo("US");
     }
 
     @Test
@@ -56,9 +70,14 @@ public class InfoControllerIntegrationTest {
         TimeUnit.SECONDS.sleep(1);
         ResponseEntity<Whois> body = this.restTemplate.getForEntity("/connection-info?ip=www.baidu.com", Whois.class);
 
-        assertThat(body.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(body.getBody().state).isEqualTo("Beijing");
-        assertThat(body.getBody().country).isEqualTo("CN");
+        Assertions.assertThat(body.getStatusCode())
+                  .isEqualTo(HttpStatus.OK);
+
+        Assertions.assertThat(body.getBody().state)
+                  .isEqualTo("Beijing");
+
+        Assertions.assertThat(body.getBody().country)
+                  .isEqualTo("CN");
     }
 
     @Test
@@ -66,8 +85,11 @@ public class InfoControllerIntegrationTest {
         TimeUnit.SECONDS.sleep(1);
         ResponseEntity<Map> body = this.restTemplate.getForEntity("/connection-info?ip=AAFSSADADASDSAD", Map.class);
 
-        assertThat(body.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(body.getBody().get("reason")).isEqualTo("Bad Request");
+        Assertions.assertThat(body.getStatusCode())
+                  .isEqualTo(HttpStatus.BAD_REQUEST);
+
+        Assertions.assertThat(body.getBody().get("reason"))
+                  .isEqualTo("Bad Request");
     }
 
 }

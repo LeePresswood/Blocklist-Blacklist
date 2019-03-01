@@ -21,7 +21,7 @@ class App extends Component {
   render() {
     const trackerRows = this.state.loadedTrackers.map(tracker =>
       <tr>
-        <td>{'www.google.com'}</td>
+        <td>{tracker.ip}</td>
         <td>{tracker.country}</td>
         <td>{tracker.state}</td>
       </tr>)

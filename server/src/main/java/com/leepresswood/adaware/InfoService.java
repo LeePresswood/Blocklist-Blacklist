@@ -13,7 +13,7 @@ public class InfoService {
     @Cacheable("ip")
     public Whois getIpInfo(String ip) {
         BufferedReader r = runWhois(ip);
-        return r == null ? null : buildResult(r);
+        return r == null ? null : buildResult(r, ip);
     }
 
     private BufferedReader runWhois(String ip) {
@@ -29,9 +29,9 @@ public class InfoService {
         }
     }
 
-    private static Whois buildResult(BufferedReader input) {
+    private static Whois buildResult(BufferedReader input, String ip) {
         try {
-            Whois results = new Whois();
+            Whois results = new Whois(ip);
 
             String line;
             while ((line = input.readLine()) != null) {

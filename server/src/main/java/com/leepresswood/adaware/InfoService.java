@@ -1,5 +1,6 @@
 package com.leepresswood.adaware;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -9,6 +10,7 @@ import java.io.InputStreamReader;
 @Service
 public class InfoService {
 
+    @Cacheable("ip")
     public Whois getIpInfo(String ip) {
         BufferedReader r = runWhois(ip);
         return r == null ? null : buildResult(r);

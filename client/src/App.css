@@ -1,6 +1,26 @@
-body {
-  background-color: black;
-  color: white;
+.col {
+  width: 50%;
+  height: 100vh;
+  box-sizing: border-box;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+
+.col .col-title {
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
 }
 
 .App-logo {

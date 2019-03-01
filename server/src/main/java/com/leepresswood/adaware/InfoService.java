@@ -34,7 +34,9 @@ public class InfoService {
             Whois results = new Whois(ip);
 
             String line;
-            while ((line = input.readLine()) != null) {
+            int count = 0;
+            while (count < 500 && (results.country.equals("") || results.state.equals(""))
+                    && (line = input.readLine()) != null) {
                 String[] tokenized = line.split(": ");
 
                 if (results.state.equals("") && tokenized[0].equals("Registrant State/Province")) {
@@ -42,9 +44,11 @@ public class InfoService {
                 } else if (results.country.equals("") && tokenized[0].equals("Registrant Country")) {
                     results.country = tokenized[1];
                 }
+
+                count++;
             }
 
-            return !results.state.equals("") && !results.country.equals("") ? results : null;
+            return results;
         } catch (IOException e) {
             return null;
         }

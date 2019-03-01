@@ -8,20 +8,32 @@ class App extends Component {
   constructor() {
     super();
 
-    this.state = { loadedTrackers: [] };
+    //Map each IP address to a fetch call; chain the fetches to load in the background.
+    const fetches =
+      ips
+        .map(ip => `http://localhost:8080/connection-info?ip=${ip}`)
+        .filter((i, id) => id < 20);
+
+    this.state = { fetches: fetches, loadedTrackers: [] };
   }
 
   componentWillMount() {
-    fetch('http://localhost:8080/connection-info?ip=www.google.com')
-      .then(res => res.json())
-      .then(whois => {
-        this.setState({ ...this.state, loadedTrackers: [whois] });
-      })
+    this.state.fetches.reduce((acc, next) => {
+      return acc
+        .then(data => data ? data.json() : null)
+        .then(jsonData => {
+          if (jsonData) {
+            this.setState({ ...this.state, loadedTrackers: this.state.loadedTrackers.concat(jsonData) });
+          }
+
+          return fetch(next);
+        });
+    }, Promise.resolve());
   }
 
   render() {
     const trackerRows = this.state.loadedTrackers.map(tracker =>
-      <tr>
+      <tr key={tracker.ip}>
         <td>{tracker.ip}</td>
         <td>{tracker.country}</td>
         <td>{tracker.state}</td>
@@ -35,14 +47,18 @@ class App extends Component {
         <div className="col">
           <h1 className="col-title">Trackers</h1>
           <table>
-            <tr>
-              <th>IP</th>
-              <th>Country</th>
-              <th>State</th>
-            </tr>
-            {
-              trackerRows
-            }
+            <thead>
+              <tr>
+                <th>IP</th>
+                <th>Country</th>
+                <th>State</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                trackerRows
+              }
+            </tbody>
           </table>
         </div>
       </div>

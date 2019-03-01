@@ -1,6 +1,7 @@
 import React, {
   Component
 } from 'react';
+import ips from "./ip.json";
 import './App.css';
 
 class App extends Component {

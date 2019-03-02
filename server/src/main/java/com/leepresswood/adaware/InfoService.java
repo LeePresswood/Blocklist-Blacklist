@@ -6,12 +6,18 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class InfoService {
 
     @Cacheable("ip")
     public Whois getIpInfo(String ip) {
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         BufferedReader r = runWhois(ip);
         return r == null ? null : buildResult(r, ip);
     }
@@ -35,17 +41,25 @@ public class InfoService {
 
             String line;
             int count = 0;
-            while (count < 500 && (results.country.equals("") || results.state.equals(""))
-                    && (line = input.readLine()) != null) {
+            boolean start = false;
+            while (count < 1000 && (results.country.length() == 0 || results.state.length() == 0) && (line = input.readLine()) != null) {
                 String[] tokenized = line.split(": ");
+                tokenized[0] = tokenized[0].trim();
 
-                if (results.state.equals("") && tokenized[0].equals("Registrant State/Province")) {
-                    results.state = tokenized[1];
-                } else if (results.country.equals("") && tokenized[0].equals("Registrant Country")) {
-                    results.country = tokenized[1];
+                if (line.contains("Domain Name") || line.contains("Registrar URL")) {
+                    start = true;
                 }
 
-                count++;
+                if (start && tokenized.length == 2) {
+                    if (results.state.length() == 0 && tokenized[0].equals("Tech State/Province")) {
+                        results.state = tokenized[1];
+                    } else if (results.country.length() == 0 && tokenized[0].equals("Tech Country")) {
+                        results.country = tokenized[1];
+                    }
+                }
+
+                if(start)
+                    count++;
             }
 
             return results;

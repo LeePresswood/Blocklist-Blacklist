@@ -1,11 +1,11 @@
 # Ad Aware
 ## Introduction
-I separated the project into a front-end and a back-end. The front-end (under `client`) was to display a map of the entire world along with points for each city that includes the location of a tracker server. The back-end (under `server`) was to handle the `whois` request as well as caching for page reloads.
+I separated the project into a front-end and a back-end. The front-end (under `client`) was to display a map of the entire world along with points for each country that includes the location of a blocked IP address. The back-end (under `server`) was to parse and paginate the dataset.
 
 ## Data
-The first step was to get a list of advertising trackers coupled with their IP addresses. Using the [dataset found here](https://www.iblocklist.com/lists) (under `adservers`), I extracted and renamed the file of more than 11,000 trackers. These results may be seen in the file titled "raw-track.txt".
+The first step was to get a list of blocked IP addresses coupled with their country of origin. Using the [dataset found here](https://dev.maxmind.com/geoip/geoip2/geolite2/#Downloads) (under `GeoLite2 Country`), I received a zipped set of blocked IPs and country mappings for various major languages. I extracted and renamed the block list for more than 320,000 IPs and the English-language country mapping file  into the top-level of this project. The raw forms of each of these extractions may be seen in the files titled "GeoLit2-Country-Blocks-IPv4.csv" and "GeoLite2-Country-Locations-en.csv", respectively.
 
-I further processed this list by collecting only the first 10,000 tracking IPs using regular expressions to match the IPs. Each line in the raw-track.txt file contains a range of IPs, and any/all of the values in the ranges can be used. This can be done as a future excercise, but I do not find this to be within the scope of this project. A single IP address from each of the 10,000 trackers will be sufficient. The results of this processing can be found in the file titled "ip.txt".
+I further processed the block list by collecting only the first 50,000 blocked IPs. Should the need for a more expansive dataset arise, it would be trivial to add from the full list of 320,000; this can be done as a future excercise. I do not find this to be within the scope of this proof-of-concept project. The results of this processing can be found in the server resource file titled "ipv4-block.csv". In this same resource folder, I've also included a separate copy of the country mappings file, here renamed "locations.csv".
 
 ## Back-End
 I built the back-end using **Spring Boot** with an extension for **Spring Web**.

@@ -1,4 +1,4 @@
-package com.leepresswood.adaware.jobs;
+package com.leepresswood.adaware.jobs.blocklist;
 
 import lombok.Data;
 

@@ -1,8 +1,8 @@
 package com.leepresswood.adaware;
 
-import com.leepresswood.adaware.jobs.Blocklist;
-import com.leepresswood.adaware.jobs.BlocklistReader;
-import com.leepresswood.adaware.jobs.BlocklistWriter;
+import com.leepresswood.adaware.jobs.blocklist.Blocklist;
+import com.leepresswood.adaware.jobs.blocklist.BlocklistReader;
+import com.leepresswood.adaware.jobs.blocklist.BlocklistWriter;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -31,27 +31,33 @@ public class Application {
     StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    BlocklistWriter writer() {
+    BlocklistWriter blocklistWriter() {
         return new BlocklistWriter();
     }
 
     @Bean
-    BlocklistReader reader() {
+    BlocklistReader blocklistReader() {
         return new BlocklistReader();
     }
 
     @Bean
     public Job blocklistJob() {
 
-        Step step = stepBuilderFactory.get("step-1")
+//        Step countryStep = stepBuilderFactory.get("step-1")
+//                .<Blocklist, Blocklist>chunk(1)
+//                .reader(blocklistReader())
+//                .writer(blocklistWriter())
+//                .build();
+
+        Step blocklistStep = stepBuilderFactory.get("step-2")
                 .<Blocklist, Blocklist>chunk(1)
-                .reader(reader())
-                .writer(writer())
+                .reader(blocklistReader())
+                .writer(blocklistWriter())
                 .build();
 
         Job job = jobBuilderFactory.get("blocklistJob")
                                    .incrementer(new RunIdIncrementer())
-                                   .start(step)
+                                   .start(blocklistStep)
                                    .build();
 
         return job;

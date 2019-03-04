@@ -1,4 +1,4 @@
-package com.leepresswood.adaware.jobs;
+package com.leepresswood.adaware.jobs.blocklist;
 
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;

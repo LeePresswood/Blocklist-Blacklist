@@ -18,6 +18,11 @@
 
 .col-title {
   text-align: center;
+  height: 5vh;
+}
+
+.col-large>div {
+  height: 90vh;
 }
 
 table {

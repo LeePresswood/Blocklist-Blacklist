@@ -1,7 +1,7 @@
 import React, {
   Component
 } from 'react';
-// import ips from "./ip.json";
+import { Chart } from "react-google-charts";
 import './App.css';
 
 class App extends Component {
@@ -21,10 +21,10 @@ class App extends Component {
     let index = 1;
     while (index < 50000) {
       fetches.push(
-        `http://localhost:8080/ips?start=${index}&size=5000`
+        `http://localhost:8080/ips?start=${index}&size=10000`
       );
 
-      index += 5000;
+      index += 10000;
     }
 
     fetches.reduce((acc, next) => {
@@ -70,6 +70,14 @@ class App extends Component {
       <div className="App">
         <div className="col-large">
           <h1 className="col-title">Map</h1>
+          <Chart
+            chartType="GeoChart"
+            data={[['Country', 'Count']].concat(Object.entries(this.state.countryCounts))}
+            mapsApiKey="AIzaSyDhoSAomGHRVsBXNW_QbljyTKoOYYcAcng"
+            width={"100%"}
+            height={"90vh"}
+            legendToggle
+          />
         </div>
         <div className="col-small">
           <h1 className="col-title">Trackers</h1>

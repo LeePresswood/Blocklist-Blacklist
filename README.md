@@ -19,24 +19,78 @@ The first step to get the back-end running was to fill a database with our block
 
 Once the batch job completes, **Spring Web** kicks in to expose a single endpoint:
 ```
-GET localhost:8080/connection-info?ip=1.1.1.1
+GET localhost:8080/ips
 
 Response:
-{
-    "ip": "1.1.1.1",
-    "country": "US",
-    "state": "NY"
+[
+    {
+        "id": 1,
+        "network": "1.0.0.0/24",
+        "country": {
+            "continent_name": "Oceania",
+            "country_name": "Australia"
+        }
+    },
+    {
+        "id": 2,
+        "network": "1.0.1.0/24",
+        "country": {
+            "continent_name": "Asia",
+            "country_name": "China"
+        }
+    },
+    {
+        "id": 3,
+        "network": "1.0.2.0/23",
+        "country": {
+            "continent_name": "Asia",
+            "country_name": "China"
+        }
+    },
+    ...
 }
 ```
 
-The above data is gathered from a local `whois` call. Unix-based operating systems should have this command installed automatically. However, as I developed this on Windows, I needed to add `whois` to my local command line. I ended up finding a [local distribution](https://docs.microsoft.com/en-us/sysinternals/downloads/whois) from Microsoft. This allowed me to use both IP address lookups (`whois 1.1.1.1`) as well as DNS names (`whois www.google.com`). I found that this local distribution sent requests to a rate-limited `whois` server that would fail if hit multiple times per second. To get around this, I chose to cache IP requests using Spring's built-in caching annotation. This has the added bonus of handling the reload of the front-end in a speedy manner.
+The above JSON response returns all 50,000 IP addresses as well as the continent and country from where the IP was located. The final response body is just over 5 MB, so I felt it reasonable to add size limits and pagination. These query parameters (`start` and `size`) may be used in the following manner:
+```
+GET localhost:8080/ips?start=40&size=3
 
-After parsing the `whois` response for the state and country, I returned a JSON representation of a data object. Using this data, I can map an approximate location of the tracker's IP address. More accuracy could be added in the future if I also included the city, but for the scope of this project, state works well.
+Response:
+[
+    {
+        "id": 40,
+        "network": "1.8.0.0/16",
+        "country": {
+            "continent_name": "Asia",
+            "country_name": "China"
+        }
+    },
+    {
+        "id": 41,
+        "network": "1.9.0.0/16",
+        "country": {
+            "continent_name": "Asia",
+            "country_name": "Malaysia"
+        }
+    },
+    {
+        "id": 42,
+        "network": "1.10.0.0/21",
+        "country": {
+            "continent_name": "Asia",
+            "country_name": "China"
+        }
+    }
+}
+```
+>**Note**: `start` is inclusive, meaning the ID passed into the parameter is the first in the response list. Also note that counting starts at 1 here.
+
+With this data exposed, we now have a list that can be used on the front-end.
 
 ## Front-End
 I built the front-end using **React**. To quickly get the project started, I used the Node package `create-react-app`. I intended this project to have a fairly simple front-end, so I kept the number of React components to a minimum. To further expand the scope of this project in the future, I would want to break the map and table components to their own files.
 
-Once the initial state of the page is loaded with an empty table, the back-end is hit with a request for each of the 10,000 IPs. To speed up the initial load, I chose to chain promises together with frequent updates to the component's state. Each time an IP resolves, the state is updated. At this same time, another request starts. This allows the page to be browsable even when the data is not fully there.
+Once the initial state of the page is loaded with an empty table, the back-end is hit with a request for the first 1,000 IPs. To speed up the initial load, I chose to chain promises together with frequent updates to the component's state. Each time a page of IPs resolves, the state is updated. At this same time, another request is sent to the server. This allows the page to be browsable while large amounts of data load in the background.
 
 ## Conclusion
 

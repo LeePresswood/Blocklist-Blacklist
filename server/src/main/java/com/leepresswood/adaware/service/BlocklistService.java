@@ -3,6 +3,7 @@ package com.leepresswood.adaware.service;
 import com.leepresswood.adaware.job.blocklist.Blocklist;
 import com.leepresswood.adaware.job.blocklist.BlocklistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +13,7 @@ public class BlocklistService {
     @Autowired
     public BlocklistRepository repo;
 
+    @Cacheable(cacheNames = {"ip", "size"})
     public List<Blocklist> getAllBlockedIps(int start, int size) {
         List<Blocklist> allPosts = repo.findAll();
 

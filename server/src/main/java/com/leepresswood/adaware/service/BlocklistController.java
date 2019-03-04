@@ -9,12 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.InvalidParameterException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 @Controller
 public class BlocklistController {
@@ -24,8 +24,11 @@ public class BlocklistController {
 
     @CrossOrigin
     @GetMapping(value = "/ips", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Blocklist>> getAllIps() throws InvalidParameterException {
-        List<Blocklist> response = service.getAllBlockedIps();
+    public ResponseEntity<List<Blocklist>> getAllIps(
+            @RequestParam(value = "start", defaultValue = "-1", required = false) int start,
+            @RequestParam(value = "size", defaultValue = "-1", required = false) int size
+    ) throws InvalidParameterException {
+        List<Blocklist> response = service.getAllBlockedIps(start, size);
 
         if (response == null) {
             throw new InvalidParameterException();
@@ -39,7 +42,7 @@ public class BlocklistController {
         return new ResponseEntity<>(Collections.singletonMap("reason", "Bad Request"), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({ InterruptedException.class, ExecutionException.class })
+    @ExceptionHandler({ Exception.class })
     public ResponseEntity<Map> serverException() {
         return new ResponseEntity<>(Collections.singletonMap("reason", "Server Error"),
                 HttpStatus.INTERNAL_SERVER_ERROR);

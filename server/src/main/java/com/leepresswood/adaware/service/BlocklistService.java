@@ -13,7 +13,23 @@ public class BlocklistService {
     @Autowired
     public BlocklistRepository repo;
 
-    public List<Blocklist> getAllBlockedIps() {
-        return repo.findAll();
+    public List<Blocklist> getAllBlockedIps(int start, int size) {
+        List<Blocklist> allPosts = repo.findAll();
+
+        if (size < 0) {
+            size = 999999999;
+        }
+
+        int startIndex = start - 1;
+        if (startIndex < 0 || startIndex > allPosts.size()) {
+            startIndex = 0;
+        }
+
+        int endIndex = startIndex + size;
+        if(endIndex < 0 || endIndex > allPosts.size()){
+            endIndex = allPosts.size();
+        }
+
+        return repo.findAll().subList(startIndex, endIndex);
     }
 }

@@ -1,4 +1,4 @@
-package com.leepresswood.adaware.jobs.country;
+package com.leepresswood.adaware.job.blocklist;
 
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,14 +8,14 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Component
-public class CountryWriter implements ItemWriter<Country> {
+public class BlocklistWriter implements ItemWriter<Blocklist> {
 
     @Autowired
-    public CountryRepository repo;
+    public BlocklistRepository repo;
 
     @Override
     @Transactional
-    public void write(List<? extends Country> ips) {
+    public void write(List<? extends Blocklist> ips) {
         repo.saveAll(ips);
     }
 }

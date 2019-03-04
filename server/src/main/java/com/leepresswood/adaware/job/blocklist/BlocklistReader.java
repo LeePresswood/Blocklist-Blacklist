@@ -1,4 +1,4 @@
-package com.leepresswood.adaware.jobs.country;
+package com.leepresswood.adaware.job.blocklist;
 
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
@@ -8,21 +8,21 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CountryReader extends FlatFileItemReader<Country> {
-    public CountryReader() {
+public class BlocklistReader extends FlatFileItemReader<Blocklist> {
+    public BlocklistReader() {
         super();
 
-        setResource(new ClassPathResource("locations.csv"));
+        setResource(new ClassPathResource("ipv4-block.csv"));
 
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
-        lineTokenizer.setNames("geoname_id", "locale_code", "continent_code", "continent_name", "country_iso_code", "country_name", "is_in_european_union");
+        lineTokenizer.setNames("network", "geoname_id", "registered_country_geoname_id", "represented_country_geoname_id", "is_anonymous_proxy", "is_satellite_provider");
         lineTokenizer.setDelimiter(",");
         lineTokenizer.setStrict(false);
 
-        BeanWrapperFieldSetMapper<Country> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
-        fieldSetMapper.setTargetType(Country.class);
+        BeanWrapperFieldSetMapper<Blocklist> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
+        fieldSetMapper.setTargetType(Blocklist.class);
 
-        DefaultLineMapper<Country> defaultLineMapper = new DefaultLineMapper<>();
+        DefaultLineMapper<Blocklist> defaultLineMapper = new DefaultLineMapper<>();
         defaultLineMapper.setLineTokenizer(lineTokenizer);
         defaultLineMapper.setFieldSetMapper(fieldSetMapper);
         setLineMapper(defaultLineMapper);

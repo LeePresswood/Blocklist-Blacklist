@@ -1,6 +1,7 @@
-package com.leepresswood.adaware.jobs.country;
+package com.leepresswood.adaware.job.country;
 
-import com.leepresswood.adaware.jobs.blocklist.Blocklist;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.leepresswood.adaware.job.blocklist.Blocklist;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -8,7 +9,7 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "countries")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "blocklist", "geoname_id", "locale_code", "is_in_european_union", "continent_code", "country_iso_code"})
 public class Country {
     @Id
     public Long geoname_id;
@@ -19,7 +20,6 @@ public class Country {
     public String country_iso_code;
     public String country_name;
     public int is_in_european_union;
-
 
     @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     public List<Blocklist> blocklist;

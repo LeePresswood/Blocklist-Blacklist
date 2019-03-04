@@ -1,8 +1,8 @@
-package com.leepresswood.adaware.jobs.blocklist;
+package com.leepresswood.adaware.job.country;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BlocklistRepository extends JpaRepository<Blocklist, Long> {
+public interface CountryRepository extends JpaRepository<Country, Long> {
 }

@@ -1,11 +1,11 @@
 package com.leepresswood.adaware;
 
-import com.leepresswood.adaware.jobs.blocklist.Blocklist;
-import com.leepresswood.adaware.jobs.blocklist.BlocklistReader;
-import com.leepresswood.adaware.jobs.blocklist.BlocklistWriter;
-import com.leepresswood.adaware.jobs.country.Country;
-import com.leepresswood.adaware.jobs.country.CountryReader;
-import com.leepresswood.adaware.jobs.country.CountryWriter;
+import com.leepresswood.adaware.job.blocklist.Blocklist;
+import com.leepresswood.adaware.job.blocklist.BlocklistReader;
+import com.leepresswood.adaware.job.blocklist.BlocklistWriter;
+import com.leepresswood.adaware.job.country.Country;
+import com.leepresswood.adaware.job.country.CountryReader;
+import com.leepresswood.adaware.job.country.CountryWriter;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;

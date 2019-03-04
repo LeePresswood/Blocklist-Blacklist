@@ -1,12 +1,14 @@
-package com.leepresswood.adaware.jobs.blocklist;
+package com.leepresswood.adaware.job.blocklist;
 
-import com.leepresswood.adaware.jobs.country.Country;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.leepresswood.adaware.job.country.Country;
 import lombok.Data;
 
 import javax.persistence.*;
 
 @Data
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "geoname_id", "registered_country_geoname_id", "represented_country_geoname_id", "is_anonymous_proxy", "is_satellite_provider"})
 public class Blocklist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,18 +21,9 @@ public class Blocklist {
     public String is_anonymous_proxy;
     public String is_satellite_provider;
 
-//    @ManyToOne(optional = false, targetEntity = Country.class)
-//    @JoinColumn(name = "geoname_id", insertable = false, updatable = false)
-//    public Country country;
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "geoname_id", insertable = false, updatable = false)
     public Country country;
-
-//    @ManyToOne(optional = false, targetEntity = Country.class)
-//    @JoinColumn(name = "registered_country_geoname_id")
-//    public Long registered_country_geoname_id;
 
     public Blocklist() {
 
@@ -43,14 +36,6 @@ public class Blocklist {
     public void setNetwork(String network) {
         this.network = network;
     }
-
-//    public String getRegistered_country_geoname_id() {
-//        return registered_country_geoname_id;
-//    }
-//
-//    public void setRegistered_country_geoname_id(String registered_country_geoname_id) {
-//        this.registered_country_geoname_id = registered_country_geoname_id;
-//    }
 
     public String getRepresented_country_geoname_id() {
         return represented_country_geoname_id;
@@ -90,13 +75,5 @@ public class Blocklist {
 
     public void setGeoname_id(Long geoname_id) {
         this.geoname_id = geoname_id;
-    }
-
-    public Country getCountry() {
-        return country;
-    }
-
-    public void setCountry(Country country) {
-        this.country = country;
     }
 }

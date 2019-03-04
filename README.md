@@ -1,8 +1,19 @@
-# Ad Aware
+# Blocklist Blacklist
 ## Introduction
+I was curious to see how often IPs from a given country are blocked due to being malicious. Maliciousness can be definine by a variety of parameters:
+1. Fraud
+2. Botnets
+3. Advertising
+4. Black Market Sales
+5. Individual penetration
+6. Government-sponsored infiltration
+
+To achieve a visualization of blocked IPs by country, I looked to find a dataset from which a connection between the two could be drawn. Upon processing this dataset, I could then present a heatmap of each country based upon how often it's represented.
+
+## Project Organization
 I separated the project into a front-end and a back-end. The front-end (under `client`) was to display a map of the entire world along with points for each country that includes the location of a blocked IP address. The back-end (under `server`) was to parse and paginate the dataset.
 
-## Data
+## Dataset
 The first step was to get a list of blocked IP addresses coupled with their country of origin. Using the [dataset found here](https://dev.maxmind.com/geoip/geoip2/geolite2/#Downloads) (under `GeoLite2 Country`), I received a zipped set of blocked IPs and country mappings for various major languages. I extracted and renamed the block list for more than 320,000 IPs and the English-language country mapping file  into the top-level of this project. The raw forms of each of these extractions may be seen in the files titled "GeoLit2-Country-Blocks-IPv4.csv" and "GeoLite2-Country-Locations-en.csv", respectively.
 
 I further processed the block list by collecting only the first 50,000 blocked IPs. Should the need for a more expansive dataset arise, it would be trivial to add from the full list of 320,000. The results of this processing can be found in the server resource file titled "ipv4-block.csv". In this same resource folder, I've also included a separate copy of the country mappings file, here renamed "locations.csv".

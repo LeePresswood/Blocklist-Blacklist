@@ -3,6 +3,9 @@ package com.leepresswood.adaware;
 import com.leepresswood.adaware.jobs.blocklist.Blocklist;
 import com.leepresswood.adaware.jobs.blocklist.BlocklistReader;
 import com.leepresswood.adaware.jobs.blocklist.BlocklistWriter;
+import com.leepresswood.adaware.jobs.country.Country;
+import com.leepresswood.adaware.jobs.country.CountryReader;
+import com.leepresswood.adaware.jobs.country.CountryWriter;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -31,8 +34,8 @@ public class Application {
     StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    BlocklistWriter blocklistWriter() {
-        return new BlocklistWriter();
+    CountryReader countryReader() {
+        return new CountryReader();
     }
 
     @Bean
@@ -41,13 +44,22 @@ public class Application {
     }
 
     @Bean
-    public Job blocklistJob() {
+    CountryWriter countryWriter() {
+        return new CountryWriter();
+    }
 
-//        Step countryStep = stepBuilderFactory.get("step-1")
-//                .<Blocklist, Blocklist>chunk(1)
-//                .reader(blocklistReader())
-//                .writer(blocklistWriter())
-//                .build();
+    @Bean
+    BlocklistWriter blocklistWriter() {
+        return new BlocklistWriter();
+    }
+
+    @Bean
+    public Job blocklistJob() {
+        Step countryStep = stepBuilderFactory.get("step-1")
+                .<Country, Country>chunk(1)
+                .reader(countryReader())
+                .writer(countryWriter())
+                .build();
 
         Step blocklistStep = stepBuilderFactory.get("step-2")
                 .<Blocklist, Blocklist>chunk(1)
@@ -57,7 +69,8 @@ public class Application {
 
         Job job = jobBuilderFactory.get("blocklistJob")
                                    .incrementer(new RunIdIncrementer())
-                                   .start(blocklistStep)
+                                   .start(countryStep)
+                                   .next(blocklistStep)
                                    .build();
 
         return job;

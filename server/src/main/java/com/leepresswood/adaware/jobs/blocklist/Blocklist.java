@@ -1,37 +1,39 @@
 package com.leepresswood.adaware.jobs.blocklist;
 
+import com.leepresswood.adaware.jobs.country.Country;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Data
 @Entity
 public class Blocklist {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
     public String network;
-    public String geoname_id;
-    public String registered_country_geoname_id;
+    public Long geoname_id;
+    public Long registered_country_geoname_id;
     public String represented_country_geoname_id;
     public String is_anonymous_proxy;
     public String is_satellite_provider;
 
-    public Blocklist(){
-        super();
-    }
+//    @ManyToOne(optional = false, targetEntity = Country.class)
+//    @JoinColumn(name = "geoname_id", insertable = false, updatable = false)
+//    public Country country;
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "geoname_id", insertable = false, updatable = false)
+    public Country country;
+
+//    @ManyToOne(optional = false, targetEntity = Country.class)
+//    @JoinColumn(name = "registered_country_geoname_id")
+//    public Long registered_country_geoname_id;
+
+    public Blocklist() {
+
     }
 
     public String getNetwork() {
@@ -42,21 +44,13 @@ public class Blocklist {
         this.network = network;
     }
 
-    public String getGeoname_id() {
-        return geoname_id;
-    }
-
-    public void setGeoname_id(String geoname_id) {
-        this.geoname_id = geoname_id;
-    }
-
-    public String getRegistered_country_geoname_id() {
-        return registered_country_geoname_id;
-    }
-
-    public void setRegistered_country_geoname_id(String registered_country_geoname_id) {
-        this.registered_country_geoname_id = registered_country_geoname_id;
-    }
+//    public String getRegistered_country_geoname_id() {
+//        return registered_country_geoname_id;
+//    }
+//
+//    public void setRegistered_country_geoname_id(String registered_country_geoname_id) {
+//        this.registered_country_geoname_id = registered_country_geoname_id;
+//    }
 
     public String getRepresented_country_geoname_id() {
         return represented_country_geoname_id;
@@ -80,5 +74,29 @@ public class Blocklist {
 
     public void setIs_satellite_provider(String is_satellite_provider) {
         this.is_satellite_provider = is_satellite_provider;
+    }
+
+    public Long getRegistered_country_geoname_id() {
+        return registered_country_geoname_id;
+    }
+
+    public void setRegistered_country_geoname_id(Long registered_country_geoname_id) {
+        this.registered_country_geoname_id = registered_country_geoname_id;
+    }
+
+    public Long getGeoname_id() {
+        return geoname_id;
+    }
+
+    public void setGeoname_id(Long geoname_id) {
+        this.geoname_id = geoname_id;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
     }
 }

@@ -29,6 +29,10 @@ public class Blocklist {
 
     }
 
+    public Blocklist(long testId) {
+        this.id = testId;
+    }
+
     public String getNetwork() {
         return network;
     }

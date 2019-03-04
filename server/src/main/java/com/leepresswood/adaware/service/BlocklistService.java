@@ -9,7 +9,6 @@ import java.util.List;
 
 @Service
 public class BlocklistService {
-
     @Autowired
     public BlocklistRepository repo;
 

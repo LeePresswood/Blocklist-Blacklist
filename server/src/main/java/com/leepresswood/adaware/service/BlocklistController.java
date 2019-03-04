@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.InvalidParameterException;
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +19,6 @@ import java.util.Map;
 
 @Controller
 public class BlocklistController {
-
     @Autowired
     private BlocklistService service;
 
@@ -39,8 +37,7 @@ public class BlocklistController {
     }
 
     @ExceptionHandler({Exception.class})
-    public ResponseEntity<Map> serverException(HttpServletRequest req, Exception ex) {
-        System.out.println(ex);
+    public ResponseEntity<Map> serverException() {
         return new ResponseEntity<>(Collections.singletonMap("reason", "Server Error"),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }

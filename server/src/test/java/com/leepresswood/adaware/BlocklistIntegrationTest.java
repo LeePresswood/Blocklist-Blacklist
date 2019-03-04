@@ -16,7 +16,7 @@ import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class BlocklistControllerIntegrationTest {
+public class BlocklistIntegrationTest {
     @Autowired
     private TestRestTemplate restTemplate;
 

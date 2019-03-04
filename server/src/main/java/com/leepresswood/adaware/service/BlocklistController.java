@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.InvalidParameterException;
 import java.util.Collections;
 import java.util.List;
@@ -28,22 +30,17 @@ public class BlocklistController {
             @RequestParam(value = "start", defaultValue = "-1", required = false) int start,
             @RequestParam(value = "size", defaultValue = "-1", required = false) int size
     ) throws InvalidParameterException {
-        List<Blocklist> response = service.getAllBlockedIps(start, size);
-
-        if (response == null) {
-            throw new InvalidParameterException();
-        }
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(service.getAllBlockedIps(start, size), HttpStatus.OK);
     }
 
-    @ExceptionHandler({ InvalidParameterException.class })
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class, NumberFormatException.class, InvalidParameterException.class})
     public ResponseEntity<Map> userException() {
         return new ResponseEntity<>(Collections.singletonMap("reason", "Bad Request"), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({ Exception.class })
-    public ResponseEntity<Map> serverException() {
+    @ExceptionHandler({Exception.class})
+    public ResponseEntity<Map> serverException(HttpServletRequest req, Exception ex) {
+        System.out.println(ex);
         return new ResponseEntity<>(Collections.singletonMap("reason", "Server Error"),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }

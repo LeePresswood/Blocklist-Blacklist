@@ -1,5 +1,7 @@
 # Blocklist Blacklist
+
 [![Build Status](https://travis-ci.com/LeePresswood/Blocklist-Blacklist.svg?branch=master)](https://travis-ci.com/LeePresswood/Blocklist-Blacklist)
+
 ![End result of 50,000 blocked IP addresses.](./map.png)
 ## Introduction
 I was curious to see how often IPs from a given country are blocked due to being malicious. Maliciousness can be definine by a variety of parameters:

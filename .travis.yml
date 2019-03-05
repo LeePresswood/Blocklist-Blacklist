@@ -1,8 +1,5 @@
 before_install: cd server
 
-script:
- - chmod +x ./gradlew build connectedCheck
-
 install: gradle wrapper
 
 language: java

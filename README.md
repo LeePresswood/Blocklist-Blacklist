@@ -22,6 +22,17 @@ I further processed the block list by collecting only the first 50,000 blocked I
 ## Back-End
 I built the back-end using **Spring Boot** with extensions for **Spring Web**, **Spring Data JPA**, and **Spring Batch**.
 
+To install the dependencies for this application, run the following from the `./server/` directory:
+```
+gradlew build
+```
+
+To run this application, run the following from the `./server/` directory:
+```
+gradlew bootRun
+```
+>**Note**: The server must be running first for the client to be populated with data. I suggest having two terminals open and running each on a different terminal. Split-screen or multi-tab terminals will also work.
+
 The first step to get the back-end running was to fill a database with our blocked IP data. I decided to use **H2**, an in-memory Java database that interfaces nicely with the Spring framework. Upon starting the **Spring Boot** application, a **Spring Batch** job is automatically started. This job has two steps that are completed in sequence:
 
 1. Load the in-memory database with a set of countries.
@@ -100,7 +111,20 @@ Response:
 With this data exposed, we now have a list that can be used on the front-end.
 
 ## Front-End
-I built the front-end using **React**. To quickly get the project started, I used the Node package `create-react-app`. I intended this project to have a fairly simple front-end, so I kept the number of React components to a minimum. To further expand the scope of this project in the future, I would want to break the map and table components to their own files.
+I built the front-end using **React**. To quickly get the project started, I used the Node package `create-react-app`.
+
+To install the dependencies for this application, run the following from the `./client/` directory:
+```
+npm install
+```
+
+To run this application, run the following from the `./client/` directory:
+```
+npm start
+```
+>**Note**: The server must be running first for the client to be populated with data. I suggest having two terminals open and running each on a different terminal. Split-screen or multi-tab terminals will also work.
+
+I intended this project to have a fairly simple front-end, so I kept the number of React components to a minimum. To further expand the scope of this project in the future, I would want to break the map and table components to their own files.
 
 Once the initial state of the page is loaded with an empty table, the back-end is hit with a request for the first 10,000 IPs. To speed up the initial load, I chose to chain promises together with frequent updates to the component's state. Each time a page of IPs resolves, the state is updated. At this same time, another request is sent to the server. This allows the page to be browsable while large amounts of data load in the background.
 

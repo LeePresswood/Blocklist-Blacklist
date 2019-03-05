@@ -9,10 +9,17 @@ class App extends Component {
     super();
 
     this.state = {
-      lastLoadedPageIndex: 1,
+      byCountry: true,
+      sortDescending: true,
       loadedIps: [],
-      countryCounts: {}
+      countryCounts: {},
+      continentCounts: {}
     };
+
+    this.setCountry = this.setCountry.bind(this);
+    this.setContinent = this.setContinent.bind(this);
+    this.setAscending = this.setAscending.bind(this);
+    this.setDescending = this.setDescending.bind(this);
   }
 
   componentWillMount() {
@@ -35,14 +42,17 @@ class App extends Component {
             jsonData = jsonData.filter(j => j && j.id && j.network && j.country && j.country.country_name && j.country.continent_name);
 
             let countryCountCopy = this.state.countryCounts;
+            let continentCountCopy = this.state.continentCounts;
             jsonData.forEach(j => {
               countryCountCopy[j.country.country_name] = (countryCountCopy[j.country.country_name] || 0) + 1;
+              continentCountCopy[j.country.continent_name] = (continentCountCopy[j.country.continent_name] || 0) + 1;
             });
 
             this.setState({
               ...this.state,
               loadedIps: this.state.loadedIps.concat(jsonData),
-              countryCounts: countryCountCopy
+              countryCounts: countryCountCopy,
+              continentCounts: continentCountCopy,
             });
           }
 
@@ -51,10 +61,54 @@ class App extends Component {
     }, Promise.resolve());
   }
 
+  setCountry() {
+    this.setState({
+      ...this.state,
+      byCountry: true
+    });
+  }
+
+  setContinent() {
+    this.setState({
+      ...this.state,
+      byCountry: false
+    });
+  }
+
+  setAscending() {
+    this.setState({
+      ...this.state,
+      sortDescending: false
+    });
+  }
+
+  setDescending() {
+    this.setState({
+      ...this.state,
+      sortDescending: true
+    });
+  }
+
+  sortOrder(a, b) {
+    return this.state.sortDescending ?
+      b[1] - a[1] :
+      a[1] - b[1];
+  }
+
   render() {
-    const trackerRows = Object.entries(this.state.countryCounts)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 20)
+    const dataToDisplay = this.state.byCountry ?
+      Object.entries(this.state.countryCounts) :
+      Object.entries(this.state.continentCounts);
+
+    const dataHeaders = this.state.byCountry ?
+      ['Country', 'Count'] :
+      ['Continent', 'Count'];
+
+    const data = [dataHeaders].concat(dataToDisplay);
+
+    const trackerRows = dataToDisplay
+      .sort((a, b) => this.sortOrder(a, b))
+      .slice(0, 15)
       .map(([key, value]) => {
         return (<tr key={key}>
           <td> {
@@ -72,7 +126,7 @@ class App extends Component {
           <h1 className="col-title">Map</h1>
           <Chart
             chartType="GeoChart"
-            data={[['Country', 'Count']].concat(Object.entries(this.state.countryCounts))}
+            data={data}
             mapsApiKey="AIzaSyDhoSAomGHRVsBXNW_QbljyTKoOYYcAcng"
             width={"100%"}
             height={"90vh"}
@@ -80,9 +134,21 @@ class App extends Component {
           />
         </div>
         <div className="col-small">
-          <h1 className="col-title">Trackers</h1>
+          <h1 className="col-title">Table</h1>
           <table>
             <thead>
+              <tr>
+                <td className="buttonRow" colSpan={2}>
+                  <button onClick={this.setCountry}>By Country</button>
+                  <button onClick={this.setContinent}>By Continent</button>
+                </td>
+              </tr>
+              <tr>
+                <td className="buttonRow" colSpan={2}>
+                  <button onClick={this.setDescending}>Descending</button>
+                  <button onClick={this.setAscending}>Ascending</button>
+                </td>
+              </tr>
               <tr>
                 <th>Country</th>
                 <th>Count</th>

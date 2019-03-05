@@ -104,7 +104,6 @@ I built the front-end using **React**. To quickly get the project started, I use
 
 Once the initial state of the page is loaded with an empty table, the back-end is hit with a request for the first 10,000 IPs. To speed up the initial load, I chose to chain promises together with frequent updates to the component's state. Each time a page of IPs resolves, the state is updated. At this same time, another request is sent to the server. This allows the page to be browsable while large amounts of data load in the background.
 
-Once data is loaded, I send it to the **Google Maps API** to form an embedded world map heatmap. The darker the color, the more prominently the country is featured in the set of blocked IPs. I've also provided a table to the right of the map that shows the top 20 countries with a frequency count of how often they have appeared in the data.
+Once some data is loaded, it is sent to the **Google Maps API** to form an embedded world map heatmap. The darker the color, the more prominently the country is featured in the set of blocked IPs. I've also provided a table to the right of the map that shows the top 20 countries with a frequency count of how often they have appeared in the data.
 
-## Conclusion
-
+To sort and manipulate this data, I've added four buttons. Two buttons allow the data set to change between viewing blocked countries versus blocked continents. The other two buttons allow the table's sort order to flip between ascending and descending.

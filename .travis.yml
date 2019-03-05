@@ -1,4 +1,3 @@
-before_script: cd server
 before_install: cd server
 
 script:

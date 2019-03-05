@@ -5,7 +5,7 @@ I was curious to see how often IPs from a given country are blocked due to being
 1. Fraud
 2. Botnets
 3. Advertising
-4. Black Market Sales
+4. Black market sales
 5. Individual penetration
 6. Government-sponsored infiltration
 
